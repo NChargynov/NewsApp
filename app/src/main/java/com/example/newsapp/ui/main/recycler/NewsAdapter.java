@@ -9,16 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.newsapp.R;
+import com.example.newsapp.models.Article;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
-    private List<String> list;
+    private List<Article> list;
 
-    public NewsAdapter(List<String> list) {
+    public NewsAdapter(List<Article> list) {
         this.list = list;
     }
 
@@ -31,12 +33,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
-        holder.tvTittle.setText(list.get(position));
+        holder.bind(list.get(position));
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setData(List<Article> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder{
@@ -48,6 +55,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             tvTittle = itemView.findViewById(R.id.tv_tittle_news);
             tvDesc = itemView.findViewById(R.id.tv_desc_news);
             imageNews = itemView.findViewById(R.id.image_news);
+        }
+
+        public void bind(Article article) {
+            tvTittle.setText(article.getTitle());
+            tvDesc.setText(article.getDescription());
+            Glide.with(imageNews.getContext()).load(article.getUrlToImage()).into(imageNews);
         }
     }
 
