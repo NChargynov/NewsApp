@@ -1,6 +1,7 @@
 
 package com.example.newsapp.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "id",
     "name"
 })
-public class Source {
+public class Source implements Serializable {
 
     @JsonProperty("id")
     private String id;

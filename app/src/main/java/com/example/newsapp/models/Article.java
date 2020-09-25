@@ -1,6 +1,7 @@
 
 package com.example.newsapp.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "publishedAt",
     "content"
 })
-public class Article {
+public class Article implements Serializable{
 
     @JsonProperty("source")
     private Source source;
@@ -40,7 +41,7 @@ public class Article {
     @JsonProperty("content")
     private String content;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+//    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("source")
     public Source getSource() {
@@ -122,14 +123,14 @@ public class Article {
         this.content = content;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+//    @JsonAnyGetter
+//    public Map<String, Object> getAdditionalProperties() {
+//        return this.additionalProperties;
+//    }
+//
+//    @JsonAnySetter
+//    public void setAdditionalProperty(String name, Object value) {
+//        this.additionalProperties.put(name, value);
+//    }
 
 }

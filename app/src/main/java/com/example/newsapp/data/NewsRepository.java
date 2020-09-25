@@ -28,4 +28,5 @@ public class NewsRepository implements INewsApiClient {
             }
         });
     }
+
 }

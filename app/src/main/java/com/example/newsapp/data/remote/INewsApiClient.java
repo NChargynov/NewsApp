@@ -2,7 +2,6 @@ package com.example.newsapp.data.remote;
 
 import com.example.newsapp.core.IBaseCallBack;
 import com.example.newsapp.models.Article;
-import com.example.newsapp.models.News;
 
 import java.util.List;
 

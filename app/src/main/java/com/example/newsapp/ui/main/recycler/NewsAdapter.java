@@ -19,6 +19,7 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private List<Article> list;
+    private OnItemClickListener onItemClickListener;
 
     public NewsAdapter(List<Article> list) {
         this.list = list;
@@ -41,9 +42,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         return list.size();
     }
 
-    public void setData(List<Article> list) {
-        this.list = list;
-        notifyDataSetChanged();
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder{
@@ -55,6 +55,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             tvTittle = itemView.findViewById(R.id.tv_tittle_news);
             tvDesc = itemView.findViewById(R.id.tv_desc_news);
             imageNews = itemView.findViewById(R.id.image_news);
+            itemView.setOnClickListener(view -> {
+                onItemClickListener.onNewsItemClickListener(getAdapterPosition());
+            });
         }
 
         public void bind(Article article) {

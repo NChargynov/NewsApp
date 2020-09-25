@@ -1,7 +1,7 @@
 package com.example.newsapp.data.remote;
-import android.util.Log;
 
 import com.example.newsapp.models.News;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public class NewsApiClient implements INewsApiClient{
+public class NewsApiClient implements INewsApiClient {
 
     static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://newsapi.org/")
@@ -25,8 +25,7 @@ public class NewsApiClient implements INewsApiClient{
         call.enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
-                if (response.isSuccessful() && response.body() != null){
-                    Log.d("ololo", response.body().getArticles().toString());
+                if (response.isSuccessful() && response.body() != null) {
                     callBack.onSuccess(response.body().getArticles());
                 } else {
                     callBack.onFailure(new Exception("Response is empty" + response.code()));
@@ -41,10 +40,12 @@ public class NewsApiClient implements INewsApiClient{
         });
     }
 
-    public interface NewsApi{
+
+    public interface NewsApi {
         @GET("v2/top-headlines")
         Call<News> getNewsHeadlines(
                 @Query("country") String language,
                 @Query("apiKey") String apiKey);
+
     }
 }
