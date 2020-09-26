@@ -6,16 +6,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.newsapp.App;
 import com.example.newsapp.R;
@@ -26,32 +25,53 @@ import com.example.newsapp.ui.main.recycler.NewsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity {
 
+    private static final String ARTICLE = "article";
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
     private List<Article> list = new ArrayList<>();
-    private ProgressBar isLoading, progress;
+    private ProgressBar isLoading, progressDown;
     private NestedScrollView nestedScrollView;
-    private int pageSize = 10;
-    private int page = 1;
+    private SwipeRefreshLayout swipeUp;
+    private int pageSize = 10, page = 1;
+    private ConnectivityManager cm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        initialization();
         createRecycler();
         getDataFromLiveData();
         listeners();
     }
 
-    private void getDataFromLiveData() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+    private void initViews() {
+        recyclerView = findViewById(R.id.recycler_view);
+        isLoading = findViewById(R.id.progress_bar);
+        nestedScrollView = findViewById(R.id.nested_scroll);
+        progressDown = findViewById(R.id.progress_bar_down);
+        swipeUp = findViewById(R.id.swipe_up);
+    }
 
+    private void initialization() {
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        getSupportActionBar().setTitle(R.string.news_title);
+        cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    private void createRecycler() {
+        adapter = new NewsAdapter(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+    }
+
+    private void getDataFromLiveData() {
+        if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
             mViewModel.receiveData(page, pageSize);
             if (App.newsDataBase.newsDao().getAll() != null) App.newsDataBase.newsDao().deleteAll();
 
@@ -59,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 App.newsDataBase.newsDao().insert(result);
                 list.addAll(result);
                 adapter.updateAdapter(list);
-                progress.setVisibility(View.GONE);
+                progressDown.setVisibility(View.GONE);
             });
         } else {
             mViewModel.newsData.observe(this, articles -> {
@@ -67,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     list.addAll(articles);
                     adapter.updateAdapter(articles);
                     isLoading.setVisibility(View.GONE);
+                    progressDown.setVisibility(View.GONE);
                 }
             });
         }
@@ -75,39 +96,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initViews() {
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        recyclerView = findViewById(R.id.recycler_view);
-        isLoading = findViewById(R.id.progress_bar);
-        nestedScrollView = findViewById(R.id.nested_scroll);
-        progress = findViewById(R.id.progress_bar_down);
-    }
-
     private void listeners() {
-        adapter.setOnItemClickListener(pos -> {
-            startActivity(new Intent(this, DetailsActivity.class).putExtra("pos", list.get(pos)));
-        });
+        adapter.setOnItemClickListener(pos ->
+                startActivity(new Intent(this, DetailsActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(ARTICLE, list.get(pos))));
 
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                    if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
-                        if (pageSize >= list.size()) {
-                            page++;
-                            pageSize = pageSize + 10;
-                            progress.setVisibility(View.VISIBLE);
-                            mViewModel.receiveData(page, pageSize);
-                            Log.d("ololo", " page " + page + "pageSize" + pageSize);
+                    if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                        if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+                            if (pageSize >= list.size()) {
+                                page++;
+                                pageSize = +10;
+                                progressDown.setVisibility(View.VISIBLE);
+                                mViewModel.receiveData(page, pageSize);
+                            } else {
+                                Toast.makeText(this, "Все данные загружены", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(this, "Все данные загружены", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "У вас интернет не подключен", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
 
-    private void createRecycler() {
-        adapter = new NewsAdapter(list);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        swipeUp.setOnRefreshListener(() -> {
+            if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+                list.clear();
+                page = 1;
+                pageSize = 10;
+                mViewModel.receiveData(page, pageSize);
+                Toast.makeText(this, "Данные успешно обновлены", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "У вас интернет не подключен", Toast.LENGTH_SHORT).show();
+            }
+            swipeUp.setRefreshing(false);
+        });
     }
 }

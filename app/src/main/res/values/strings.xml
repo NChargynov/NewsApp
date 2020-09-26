@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">NewsApp</string>
+    <string name="news_title">News</string>
+    <string name="details_tittle">Details</string>
+    <string name="author_details">\Автор \</string>
+    <string name="author_unknown">Автор неизвестен</string>
+    <string name="url_news">\Ссылка на новость: \</string>
+    <string name="date_detail">\Дата: \</string>
+    <string name="author_res">Автор</string>
+    <string name="tittle_res">Заголовок</string>
+    <string name="desc_res">Описание</string>
+    <string name="url_res">Ссылка на новость</string>
+    <string name="date_res">Дата</string>
 </resources>
