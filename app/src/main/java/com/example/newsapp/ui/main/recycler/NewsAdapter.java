@@ -1,19 +1,14 @@
 package com.example.newsapp.ui.main.recycler;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.newsapp.R;
 import com.example.newsapp.models.Article;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
@@ -23,6 +18,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public NewsAdapter(List<Article> list) {
         this.list = list;
+    }
+
+    public void updateAdapter(List<Article> updateList){
+        list = updateList;
+        notifyDataSetChanged();
     }
 
     @NonNull

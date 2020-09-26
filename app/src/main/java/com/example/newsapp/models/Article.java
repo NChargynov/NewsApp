@@ -1,6 +1,10 @@
 
 package com.example.newsapp.models;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +26,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "publishedAt",
     "content"
 })
+@Entity
 public class Article implements Serializable{
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @Ignore
     @JsonProperty("source")
     private Source source;
     @JsonProperty("author")
@@ -47,7 +55,6 @@ public class Article implements Serializable{
     public Source getSource() {
         return source;
     }
-
     @JsonProperty("source")
     public void setSource(Source source) {
         this.source = source;
@@ -123,6 +130,14 @@ public class Article implements Serializable{
         this.content = content;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 //    @JsonAnyGetter
 //    public Map<String, Object> getAdditionalProperties() {
 //        return this.additionalProperties;
@@ -131,6 +146,6 @@ public class Article implements Serializable{
 //    @JsonAnySetter
 //    public void setAdditionalProperty(String name, Object value) {
 //        this.additionalProperties.put(name, value);
-//    }
 
+//    }
 }

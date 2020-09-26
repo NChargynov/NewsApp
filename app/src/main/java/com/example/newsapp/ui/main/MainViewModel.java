@@ -1,5 +1,8 @@
 package com.example.newsapp.ui.main;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,16 +15,21 @@ import java.util.List;
 public class MainViewModel extends ViewModel {
 
     MutableLiveData<List<Article>> news = new MutableLiveData<>();
-    private List<Article> mNews;
+    MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    LiveData<List<Article>> newsData = App.iNewsStorage.getAllLive();
+//    public static Integer page = 1;
 
 
-    void receiveData() {
-        App.newsRepository.getNewsHeadlines("ru", "34d3aa9ece5648a188062fe1b24c84fd",
+    void setIsLoading(){
+        isLoading.setValue(true);
+    }
+
+    void receiveData(Integer pageSize, Integer page) {
+        App.newsRepository.getNewsHeadlines("ru", "34d3aa9ece5648a188062fe1b24c84fd", pageSize, page,
                 new INewsApiClient.NewsCallBack() {
             @Override
             public void onSuccess(List<Article> result) {
-                mNews = result;
-                news.setValue(mNews);
+                news.setValue(result);
             }
 
             @Override
@@ -29,5 +37,6 @@ public class MainViewModel extends ViewModel {
 
             }
         });
+
     }
 }

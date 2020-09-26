@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface INewsApiClient {
 
-    void getNewsHeadlines(String language, String apiKey, NewsCallBack callBack);
+    void getNewsHeadlines(String language, String apiKey, Integer pageSize, Integer page, NewsCallBack callBack);
 
     interface NewsCallBack extends IBaseCallBack<List<Article>>{
 

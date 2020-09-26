@@ -1,22 +1,29 @@
 package com.example.newsapp.data;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.newsapp.data.remote.INewsApiClient;
+import com.example.newsapp.data.remote.INewsStorage;
+import com.example.newsapp.db.NewsDao;
 import com.example.newsapp.models.Article;
 
 import java.util.List;
 
-public class NewsRepository implements INewsApiClient {
+public class NewsRepository implements INewsApiClient, INewsStorage {
 
     private INewsApiClient iNewsApiClient;
+    private INewsStorage iNewsStorage;
+    private NewsDao newsDao;
 
-    public NewsRepository(INewsApiClient iNewsApiClient) {
+    public NewsRepository(INewsApiClient iNewsApiClient, INewsStorage iNewsStorage, NewsDao newsDao) {
         this.iNewsApiClient = iNewsApiClient;
+        this.iNewsStorage = iNewsStorage;
+        this.newsDao = newsDao;
     }
 
-
     @Override
-    public void getNewsHeadlines(String language, String apiKey, final NewsCallBack callBack) {
-        iNewsApiClient.getNewsHeadlines(language, apiKey, new NewsCallBack() {
+    public void getNewsHeadlines(String language, String apiKey, Integer pageSize, Integer page, final NewsCallBack callBack) {
+        iNewsApiClient.getNewsHeadlines(language, apiKey, pageSize, page, new NewsCallBack() {
             @Override
             public void onSuccess(List<Article> result) {
                 callBack.onSuccess(result);
@@ -29,4 +36,8 @@ public class NewsRepository implements INewsApiClient {
         });
     }
 
+    @Override
+    public LiveData<List<Article>> getAllLive() {
+        return iNewsStorage.getAllLive();
+    }
 }
