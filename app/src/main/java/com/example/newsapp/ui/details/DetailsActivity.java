@@ -24,29 +24,26 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         initViews();
-        if (getIntent()!= null){
+        if (getIntent() != null) {
             Article article = (Article) getIntent().getSerializableExtra("pos");
-            if (article != null){
+            if (article != null) {
                 tvTittle.setText(article.getTitle());
                 tvDesc.setText(article.getDescription());
                 Glide.with(imageNews.getContext()).load(article.getUrlToImage()).into(imageNews);
-                if (article.getAuthor()!= null){
+                if (article.getAuthor() != null) {
                     tvAuthor.setText("Автор " + article.getAuthor());
                 } else {
                     tvAuthor.setText("Автор неизвестен");
                 }
                 tvUrl.setText("Ссылка на новость: " + article.getUrl());
                 tvPublishedAt.setText("Дата: " + article.getPublishedAt());
-                if (article.getSource().getName() != null){
-                    tvSource.setText("Источник " + article.getSource().getName());
-                }else {
-                    tvSource.setText("Источник неизвестен");
-                }
+
             }
         }
     }
 
     private void initViews() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tvTittle = findViewById(R.id.tv_tittle);
         tvDesc = findViewById(R.id.tv_desc);
         imageNews = findViewById(R.id.image_news);
@@ -54,5 +51,10 @@ public class DetailsActivity extends AppCompatActivity {
         tvPublishedAt = findViewById(R.id.tv_publishedAt);
         tvAuthor = findViewById(R.id.tv_author);
         tvSource = findViewById(R.id.tv_source);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

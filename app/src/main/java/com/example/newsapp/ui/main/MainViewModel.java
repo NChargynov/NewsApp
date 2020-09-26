@@ -17,26 +17,21 @@ public class MainViewModel extends ViewModel {
     MutableLiveData<List<Article>> news = new MutableLiveData<>();
     MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     LiveData<List<Article>> newsData = App.iNewsStorage.getAllLive();
-//    public static Integer page = 1;
 
 
-    void setIsLoading(){
-        isLoading.setValue(true);
-    }
-
-    void receiveData(Integer pageSize, Integer page) {
-        App.newsRepository.getNewsHeadlines("ru", "34d3aa9ece5648a188062fe1b24c84fd", pageSize, page,
+    void receiveData(int page, int pageSize) {
+        App.newsRepository.getNewsHeadlines("ru", "9941da606ad2474c8a3c60939772cada", page, pageSize,
                 new INewsApiClient.NewsCallBack() {
-            @Override
-            public void onSuccess(List<Article> result) {
-                news.setValue(result);
-            }
+                    @Override
+                    public void onSuccess(List<Article> result) {
+                        news.setValue(result);
+                        isLoading.setValue(true);
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
-
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("ololo", "error" + e);
+                    }
+                });
     }
 }

@@ -1,7 +1,5 @@
 package com.example.newsapp.data.remote;
 
-import android.content.Intent;
-
 import com.example.newsapp.models.News;
 
 import retrofit2.Call;
@@ -22,8 +20,8 @@ public class NewsApiClient implements INewsApiClient {
     public static NewsApi client = retrofit.create(NewsApi.class);
 
     @Override
-    public void getNewsHeadlines(String language, String apiKey, Integer pageSize, Integer page, final NewsCallBack callBack) {
-        Call<News> call = client.getNewsHeadlines(language, apiKey, pageSize, page);
+    public void getNewsHeadlines(String language, String apiKey, int page, int pageSize, final NewsCallBack callBack) {
+        Call<News> call = client.getNewsHeadlines(language, apiKey, page, pageSize);
         call.enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
@@ -48,8 +46,8 @@ public class NewsApiClient implements INewsApiClient {
         Call<News> getNewsHeadlines(
                 @Query("country") String language,
                 @Query("apiKey") String apiKey,
-                @Query("pageSize")Integer pageSize,
-                @Query("page")Integer page);
+                @Query("page") int page,
+                @Query("pageSize")int pageSize);
 
     }
 }

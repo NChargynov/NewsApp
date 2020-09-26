@@ -22,8 +22,8 @@ public class NewsRepository implements INewsApiClient, INewsStorage {
     }
 
     @Override
-    public void getNewsHeadlines(String language, String apiKey, Integer pageSize, Integer page, final NewsCallBack callBack) {
-        iNewsApiClient.getNewsHeadlines(language, apiKey, pageSize, page, new NewsCallBack() {
+    public void getNewsHeadlines(String language, String apiKey, int page, int pageSize, final NewsCallBack callBack) {
+        iNewsApiClient.getNewsHeadlines(language, apiKey, page, pageSize, new NewsCallBack() {
             @Override
             public void onSuccess(List<Article> result) {
                 callBack.onSuccess(result);

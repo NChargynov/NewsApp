@@ -1,9 +1,5 @@
 
 package com.example.newsapp.models;
-
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +18,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "articles"
 })
 public class News {
-
-
     @JsonProperty("status")
     private String status;
     @JsonProperty("totalResults")

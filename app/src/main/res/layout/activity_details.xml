@@ -1,77 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.details.DetailsActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/image_news"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:src="@mipmap/ic_launcher_logo"/>
-        <TextView
-            android:layout_marginTop="4dp"
-            android:textSize="17sp"
-            android:id="@+id/tv_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Автор"/>
-
-        <TextView
-            android:layout_marginTop="4dp"
-            android:id="@+id/tv_tittle"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Заголовок"
-            android:textColor="@android:color/black"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:padding="8dp">
 
-        <TextView
-            android:layout_marginTop="4dp"
-            android:id="@+id/tv_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Описание"
-            android:textSize="25sp"/>
+            <ImageView
+                android:id="@+id/image_news"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@mipmap/ic_launcher_logo"/>
+            <TextView
+                android:layout_marginTop="4dp"
+                android:textSize="17sp"
+                android:id="@+id/tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Автор"/>
 
-        <TextView
-            android:textSize="17sp"
-            android:id="@+id/tv_source"
-            android:layout_marginTop="8dp"
-            android:text="Источник"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="4dp"
+                android:id="@+id/tv_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Заголовок"
+                android:textColor="@android:color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:layout_marginTop="8dp"
-            android:textSize="17sp"
-            android:autoLink="all"
-            android:text="Ссылка на новость"
-            android:id="@+id/tv_url"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="4dp"
+                android:id="@+id/tv_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Описание"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:textSize="17sp"
+                android:id="@+id/tv_source"
+                android:layout_marginTop="8dp"
+                android:text="Источник"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textSize="17sp"
+                android:autoLink="all"
+                android:text="Ссылка на новость"
+                android:id="@+id/tv_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
 
-        <TextView
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:textSize="17sp"
-            android:text="Дата"
-            android:id="@+id/tv_publishedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:textSize="17sp"
+                android:text="Дата"
+                android:id="@+id/tv_publishedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
-</ScrollView>
+
+
+    </ScrollView>
+
+
+</LinearLayout>
