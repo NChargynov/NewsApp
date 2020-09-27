@@ -1,7 +1,5 @@
 package com.example.newsapp.data.remote;
-
 import com.example.newsapp.models.News;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -9,11 +7,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import static com.example.newsapp.utils.Config.BASE_URL;
 
 public class NewsApiClient implements INewsApiClient {
 
     static Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://newsapi.org/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
@@ -28,7 +27,7 @@ public class NewsApiClient implements INewsApiClient {
                 if (response.isSuccessful() && response.body() != null) {
                     callBack.onSuccess(response.body().getArticles());
                 } else {
-                    callBack.onFailure(new Exception("Response is empty" + response.code()));
+                    callBack.onFailure(new Exception("Response is empty " + response.code()));
                 }
 
             }
@@ -47,7 +46,7 @@ public class NewsApiClient implements INewsApiClient {
                 @Query("country") String language,
                 @Query("apiKey") String apiKey,
                 @Query("page") int page,
-                @Query("pageSize")int pageSize);
+                @Query("pageSize") int pageSize);
 
     }
 }

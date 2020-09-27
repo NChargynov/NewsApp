@@ -2,38 +2,29 @@
 package com.example.newsapp.models;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "source",
-    "author",
-    "title",
-    "description",
-    "url",
-    "urlToImage",
-    "publishedAt",
-    "content"
+        "author",
+        "title",
+        "description",
+        "url",
+        "urlToImage",
+        "publishedAt",
+        "content"
 })
 @Entity
-public class Article implements Serializable{
+public class Article implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @Ignore
-    @JsonProperty("source")
-    private Source source;
     @JsonProperty("author")
     private String author;
     @JsonProperty("title")
@@ -48,17 +39,7 @@ public class Article implements Serializable{
     private String publishedAt;
     @JsonProperty("content")
     private String content;
-    @JsonIgnore
-//    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("source")
-    public Source getSource() {
-        return source;
-    }
-    @JsonProperty("source")
-    public void setSource(Source source) {
-        this.source = source;
-    }
 
     @JsonProperty("author")
     public String getAuthor() {
@@ -137,15 +118,4 @@ public class Article implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-
-//    @JsonAnyGetter
-//    public Map<String, Object> getAdditionalProperties() {
-//        return this.additionalProperties;
-//    }
-//
-//    @JsonAnySetter
-//    public void setAdditionalProperty(String name, Object value) {
-//        this.additionalProperties.put(name, value);
-
-//    }
 }

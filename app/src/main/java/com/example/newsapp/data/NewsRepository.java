@@ -1,12 +1,9 @@
 package com.example.newsapp.data;
-
 import androidx.lifecycle.LiveData;
-
 import com.example.newsapp.data.remote.INewsApiClient;
 import com.example.newsapp.data.remote.INewsStorage;
 import com.example.newsapp.db.NewsDao;
 import com.example.newsapp.models.Article;
-
 import java.util.List;
 
 public class NewsRepository implements INewsApiClient, INewsStorage {
@@ -40,4 +37,20 @@ public class NewsRepository implements INewsApiClient, INewsStorage {
     public LiveData<List<Article>> getAllLive() {
         return iNewsStorage.getAllLive();
     }
+
+    @Override
+    public List<Article> getAll() {
+        return iNewsStorage.getAll();
+    }
+
+    @Override
+    public void deleteAll() {
+        iNewsStorage.deleteAll();
+    }
+
+    @Override
+    public void insert(List<Article> articles) {
+        iNewsStorage.insert(articles);
+    }
+
 }

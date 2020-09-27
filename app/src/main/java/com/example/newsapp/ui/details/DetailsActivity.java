@@ -1,20 +1,14 @@
 package com.example.newsapp.ui.details;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-import com.example.newsapp.App;
 import com.example.newsapp.R;
-import com.example.newsapp.data.remote.INewsApiClient;
 import com.example.newsapp.models.Article;
-
-import java.util.List;
+import java.util.Objects;
 
 public class DetailsActivity extends AppCompatActivity {
     private TextView tvTittle, tvDesc, tvUrl, tvPublishedAt, tvAuthor;
@@ -28,7 +22,6 @@ public class DetailsActivity extends AppCompatActivity {
         initViews();
         initialization();
         getDataFromIntent();
-
     }
 
     private void initViews() {
@@ -41,7 +34,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initialization() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.details_tittle);
     }
 

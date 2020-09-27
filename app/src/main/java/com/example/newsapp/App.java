@@ -17,13 +17,14 @@ public class App extends Application {
     public static NewsRepository newsRepository;
     public static NewsDataBase newsDataBase;
     public static INewsStorage iNewsStorage;
+    public final String NAME_DB = "news.db";
 
     @Override
     public void onCreate() {
         super.onCreate();
         iNewsApiClient = new NewsApiClient();
         newsDataBase = Room.databaseBuilder(getApplicationContext(),
-                NewsDataBase.class, "news.db")
+                NewsDataBase.class, NAME_DB)
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();

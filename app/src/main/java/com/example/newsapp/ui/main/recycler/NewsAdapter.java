@@ -20,7 +20,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         this.list = list;
     }
 
-    public void updateAdapter(List<Article> updateList){
+    public void updateAdapter(List<Article> updateList) {
         list = updateList;
         notifyDataSetChanged();
     }
@@ -46,7 +46,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         this.onItemClickListener = onItemClickListener;
     }
 
-    public class NewsViewHolder extends RecyclerView.ViewHolder{
+    public class NewsViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTittle, tvDesc;
         private ImageView imageNews;
 

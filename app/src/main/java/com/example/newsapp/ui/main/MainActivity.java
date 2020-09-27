@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,10 +25,12 @@ import com.example.newsapp.ui.main.recycler.NewsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String ARTICLE = "article";
+    private static final String IS_ORIENT = "isOrient";
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeUp;
     private int pageSize = 10, page = 1;
     private ConnectivityManager cm;
+    private Boolean isOrientation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
         createRecycler();
         getDataFromLiveData();
         listeners();
+
+        if (savedInstanceState != null) {
+            isOrientation = savedInstanceState.getBoolean(IS_ORIENT);
+            isOrientation = true;
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_ORIENT, isOrientation);
     }
 
     private void initViews() {
@@ -59,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialization() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        getSupportActionBar().setTitle(R.string.news_title);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.news_title);
         cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
@@ -71,46 +86,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDataFromLiveData() {
+        mViewModel.newsData.observe(this, articles -> {
+            if (articles != null) {
+                list.addAll(articles);
+                adapter.updateAdapter(articles);
+                isLoading.setVisibility(View.GONE);
+                progressDown.setVisibility(View.GONE);
+            }
+        });
         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+            if (App.newsRepository.getAll() != null) App.newsRepository.deleteAll();
             mViewModel.receiveData(page, pageSize);
-            if (App.newsDataBase.newsDao().getAll() != null) App.newsDataBase.newsDao().deleteAll();
-
             mViewModel.news.observe(this, result -> {
-                App.newsDataBase.newsDao().insert(result);
-                list.addAll(result);
+                if (isOrientation) {
+                    list.clear();
+                    App.newsRepository.deleteAll();
+                }
+                App.newsRepository.insert(result);
+                list.addAll(App.newsRepository.getAll());
                 adapter.updateAdapter(list);
+                isOrientation = true;
                 progressDown.setVisibility(View.GONE);
             });
-        } else {
-            mViewModel.newsData.observe(this, articles -> {
-                if (articles != null) {
-                    list.addAll(articles);
-                    adapter.updateAdapter(articles);
-                    isLoading.setVisibility(View.GONE);
-                    progressDown.setVisibility(View.GONE);
-                }
-            });
+            isLoading.setVisibility(View.GONE);
+            mViewModel.exception.observe(this, e ->
+                    Toast.makeText(MainActivity.this, "Ошибка " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
-        mViewModel.isLoading.observe(this, aBoolean -> {
-            if (aBoolean) isLoading.setVisibility(View.GONE);
-        });
     }
 
     private void listeners() {
-        adapter.setOnItemClickListener(pos ->
-                startActivity(new Intent(this, DetailsActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                .putExtra(ARTICLE, list.get(pos))));
+        adapter.setOnItemClickListener(pos -> {
+            startActivity(new Intent(this, DetailsActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(ARTICLE, list.get(pos)));
+        });
 
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                     if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
-                            if (pageSize >= list.size()) {
+                            if (Objects.requireNonNull(mViewModel.news.getValue()).size() >= pageSize) {
                                 page++;
                                 pageSize = +10;
                                 progressDown.setVisibility(View.VISIBLE);
                                 mViewModel.receiveData(page, pageSize);
+                                if (isOrientation) {
+                                    isOrientation = false;
+                                }
                             } else {
                                 Toast.makeText(this, "Все данные загружены", Toast.LENGTH_SHORT).show();
                             }
@@ -122,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         swipeUp.setOnRefreshListener(() -> {
             if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+                App.newsRepository.deleteAll();
                 list.clear();
                 page = 1;
                 pageSize = 10;
