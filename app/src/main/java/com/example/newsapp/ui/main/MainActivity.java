@@ -86,14 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDataFromLiveData() {
-        mViewModel.newsData.observe(this, articles -> {
-            if (articles != null) {
-                list.addAll(articles);
-                adapter.updateAdapter(articles);
-                isLoading.setVisibility(View.GONE);
-                progressDown.setVisibility(View.GONE);
-            }
-        });
         if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
             if (App.newsRepository.getAll() != null) App.newsRepository.deleteAll();
             mViewModel.receiveData(page, pageSize);
@@ -103,14 +95,23 @@ public class MainActivity extends AppCompatActivity {
                     App.newsRepository.deleteAll();
                 }
                 App.newsRepository.insert(result);
-                list.addAll(App.newsRepository.getAll());
+                list.addAll(result);
                 adapter.updateAdapter(list);
                 isOrientation = true;
                 progressDown.setVisibility(View.GONE);
+                isLoading.setVisibility(View.GONE);
             });
-            isLoading.setVisibility(View.GONE);
             mViewModel.exception.observe(this, e ->
                     Toast.makeText(MainActivity.this, "Ошибка " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            mViewModel.newsData.observe(this, articles -> {
+                if (articles != null) {
+                    list.addAll(articles);
+                    adapter.updateAdapter(articles);
+                    isLoading.setVisibility(View.GONE);
+                    progressDown.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
